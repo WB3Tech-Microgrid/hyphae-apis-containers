@@ -5,8 +5,8 @@ on:
     branches: [ "main" ]
     tags:
       - 'v*.*.*'
-    paths:
-      - 'hyphae-apis-base-java/**'
+#     paths:
+#       - 'hyphae-apis-base-java/**'
 
 env:
   REGISTRY: ghcr.io
