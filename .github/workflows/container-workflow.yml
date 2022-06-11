@@ -83,8 +83,8 @@ jobs:
             org.opencontainers.image.created=${{ steps.prep.outputs.created }} 
             org.opencontainers.image.revision=${{ github.sha }}
 
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        run: cosign sign $${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main@${{ steps.build-and-push.outputs.digest }}
+      # - name: Sign the published Docker image
+      #   if: ${{ github.event_name != 'pull_request' }}
+      #   env:
+      #     COSIGN_EXPERIMENTAL: "true"
+      #   run: cosign sign $${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main@${{ steps.build-and-push.outputs.digest }}
