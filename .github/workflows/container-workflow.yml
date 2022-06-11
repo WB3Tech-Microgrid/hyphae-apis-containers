@@ -35,6 +35,7 @@ jobs:
       IMAGE_NAME: hyphae-apis-base-java
       IMAGE_DESCRIPTION: "Base image for all WB3Tech Microgrid Hyphae software."
       IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/hyphae-apis-base-java
+      REPOSITORY: ghcr.io/wb3tech-microgrid
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3 
@@ -72,7 +73,7 @@ jobs:
           context: ${{ env.IMAGE_CONTEXT }}
           file: ${{ env.IMAGE_CONTEXT }}/${{ env.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/wb3tech-microgrid/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}
+          tags: ${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}  Why does this not work?
           labels: |
             org.opencontainers.image.title=${{env.IMAGE_NAME}}
             org.opencontainers.image.description=${{env.IMAGE_DESCRIPTION}}
@@ -86,4 +87,4 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: "true"
-        run: cosign sign ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
+        run: cosign sign $${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main@${{ steps.build-and-push.outputs.digest }}
