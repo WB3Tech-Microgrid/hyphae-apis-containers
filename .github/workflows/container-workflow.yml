@@ -41,8 +41,6 @@ jobs:
           cosign-release: 'v1.7.1'
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
-        with:
-          buildkitd-flags: --debug
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
@@ -59,16 +57,12 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
+          buildkitd-flags: --debug
           context: ${{ env.IMAGE_CONTEXT }}
           file: ${{ env.IMAGE_CONTEXT }}/${{ env.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          labels: |
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.source=${{ github.repositoryUrl }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta.outputs.labels }}
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
