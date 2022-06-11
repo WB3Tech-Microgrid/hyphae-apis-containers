@@ -30,12 +30,11 @@ jobs:
       packages: write
       id-token: write
     env:
-      IMAGE_DIRECTORY: hyphae-apis-base-java
+      IMAGE_CONTEXT: ./hyphae-apis-base-java
       IMAGE_FILE: Containerfile
       IMAGE_NAME: hyphae-apis-base-java
       IMAGE_DESCRIPTION: "Base image for all WB3Tech Microgrid Hyphae software."
-      IMAGE_CONTEXT: ./${{env.IMAGE_DIRECTORY}}
-      IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/{{env.IMAGE_DIRECTORY}}
+      IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/hyphae-apis-base-java
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3  
