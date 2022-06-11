@@ -72,7 +72,7 @@ jobs:
           context: ${{ env.IMAGE_CONTEXT }}
           file: ${{ env.IMAGE_CONTEXT }}/${{ env.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/WB3Tech-Microgrid/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}
           labels: |
             org.opencontainers.image.title=${{env.IMAGE_NAME}}
             org.opencontainers.image.description=${{env.IMAGE_DESCRIPTION}}
