@@ -70,7 +70,7 @@ jobs:
           context: ${{ env.IMAGE_CONTEXT }}
           file: ${{ env.IMAGE_CONTEXT }}/${{ env.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}  Why does this not work?
+          tags: ${{ steps.meta.outputs.tags }} #${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}  Why does this not work?
           labels: |
             org.opencontainers.image.title=${{env.IMAGE_NAME}}
             org.opencontainers.image.description=${{env.IMAGE_DESCRIPTION}}
