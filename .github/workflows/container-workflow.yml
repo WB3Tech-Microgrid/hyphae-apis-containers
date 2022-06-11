@@ -37,14 +37,20 @@ jobs:
       IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/hyphae-apis-base-java
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  
+        uses: actions/checkout@v3 
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2 
+
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
         with:
           cosign-release: 'v1.7.1'
+
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
+
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
@@ -52,11 +58,13 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
@@ -73,6 +81,7 @@ jobs:
             org.opencontainers.image.version=${{ steps.prep.outputs.version }} 
             org.opencontainers.image.created=${{ steps.prep.outputs.created }} 
             org.opencontainers.image.revision=${{ github.sha }}
+
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
