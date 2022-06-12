@@ -1,34 +1,50 @@
-# Base Image. Default = ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:latest
-ARG $BASE_IMAGE=ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:latest"}
-
-# Name of the jar which is located in the directory /hyphae-apis-web.  Default = hyphae-apis-web.jar
+# Location of the jar to copy  Default = hyphae-apis-web.jar
 ARG JAR=hyphae-apis-web.jar
 # Java Flag - jabva.net.preferIPv4Stack. Default = true
 ARG PREFER_IPV4=true
 # Java Flag - user.timezone.  Default = Asia/Tokyo
 ARG USER_TIMEZONE=Asia/Tokyo
-# Location of the java logging.properties file. Default = ./logging.properties
-ARG LOGGING_PROPERTIES=./logging.properties
-# Location of the Hazelcrest cluster configuration file. Default = ./cluster.xml
-ARG CLUSTER_XML=./cluster.xml
-# Location of the Hyphe APIS Web configuration file. Default = ./config.json
-ARG CONFIG_JSON=./config.json
+# Location of the java logging.properties file to copy. Default = logging.properties
+ARG LOGGING_PROPERTIES=logging.properties
+# Location of the Hazelcrest cluster configuration file to copy. Default = cluster.xml
+ARG CLUSTER_XML=cluster.xml
+# Location of the Hyphe APIS Web configuration file to copy. Default = config.json
+ARG CONFIG_JSON=config.json
 # Network for the Hazelcrest cluster host. Default = 127.0.0.1
 ARG CLUSTER_HOST=127.0.0.1
-# Location of the PEM public cert. Default = ./cert.pem
-ARG CERT_PEM=./cert.pem
-# Location of the PEM private key. Default = ./key.pem
-ARG KEY_PEM=./key.pem
+# Location of the PEM public cert to copy. Default = cert.pem
+ARG CERT_PEM=cert.pem
+# Location of the PEM private key to copy. Default = key.pem
+ARG KEY_PEM=key.pem
 
+FROM ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:sha-4872afece130f73adc6bd771e3fbfa80622ddc64
 
-FROM $BASE_IMAGE
+ENV DESCRIPTION="WB3Tech Microgrid - Hyphae Web APIS - Container"
+LABEL \
+    maintainer="Bill Bensing <opensource-maintainer@wb3tech.com" \
+    name="wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-web" \
+    summary="$DESCRIPTION" \
+    description="$DESCRIPTION" \
+    architecture="x86_64" \
+    io.k8s.display-name="WB3Tech Microgrid - Hyphae APIS Web" \
+    io.k8s.description="$DESCRIPTION" 
 
-WORKDIR /hyphae-apis-main
+WORKDIR /
+RUN mkdir hyphae-apis-web
+COPY $JAR /hyphae-apis-web/hyphae-apis-web.jar
+COPY $LOGGING_PROPERTIES /hyphae-apis-web/logging.properties
+COPY $CLUSTER_XML /hyphae-apis-web/cluster.xml
+COPY $CONFIG_JSON /hyphae-apis-web/config.json
 
-CMD java -jar $JAR \
+WORKDIR /hyphae-apis-web
+
+EXPOSE 5701 8080 54327
+
+CMD java \
     -Djava.net.preferIPv4Stack=$PREFER_IPV4 \
     -Duser.timezone=$USER_TIMEZONE \
-    -Djava.util.logging.config.file=$LOGGING_PROPERTIES \
-    -Dvertx.hazelcast.config=$CLUSTER_XML \
-    -conf $CONFIG_JSON \
-    -cluster -cluster-host $CLUSTER_HOST
+    -cluster -cluster-host $CLUSTER_HOST \
+    -jar ./hyphae-apis-web.jar \
+    -Djava.util.logging.config.file=./logging.properties \
+    -Dvertx.hazelcast.config=./cluster.xml \
+    -conf ./config.json \
