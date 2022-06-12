@@ -17,6 +17,7 @@ ARG CERT_PEM=cert.pem
 # Location of the PEM private key to copy. Default = key.pem
 ARG KEY_PEM=key.pem
 
+
 FROM ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:sha-4872afece130f73adc6bd771e3fbfa80622ddc64
 
 ENV DESCRIPTION="WB3Tech Microgrid - Hyphae Web APIS - Container"
