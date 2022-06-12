@@ -15,7 +15,7 @@ env:
   IMAGE_CONTEXT: ./hyphae-apis-web
   IMAGE_FILE: Containerfile
   IMAGE_NAME: hyphae-apis-web
-  IMAGE_DESCRIPTION: "Containe which runs the Hyphae Web component in WB3Tech Microgrid"
+  IMAGE_DESCRIPTION: "Container which runs the Hyphae Web application component in WB3Tech Microgrid"
   IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/hyphae-apis-web
 
 jobs:
