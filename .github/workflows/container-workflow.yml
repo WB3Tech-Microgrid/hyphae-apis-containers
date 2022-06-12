@@ -63,7 +63,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{env.CONTAINER_REPOSITORY}}
           tags: |
-            type=semver,pattern={{raw}},
+            type=semver,pattern={{raw}}
             type=sha,prefix=sha-,format=long
 
       - name: Build and push Docker image
