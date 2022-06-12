@@ -1,0 +1,34 @@
+# Base Image. Default = ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:latest
+ARG $BASE_IMAGE=ghcr.io/wb3tech-microgrid/hyphae-apis-containers/hyphae-apis-base-java:latest"}
+
+# Name of the jar which is located in the directory /hyphae-apis-web.  Default = hyphae-apis-web.jar
+ARG JAR=hyphae-apis-web.jar
+# Java Flag - jabva.net.preferIPv4Stack. Default = true
+ARG PREFER_IPV4=true
+# Java Flag - user.timezone.  Default = Asia/Tokyo
+ARG USER_TIMEZONE=Asia/Tokyo
+# Location of the java logging.properties file. Default = ./logging.properties
+ARG LOGGING_PROPERTIES=./logging.properties
+# Location of the Hazelcrest cluster configuration file. Default = ./cluster.xml
+ARG CLUSTER_XML=./cluster.xml
+# Location of the Hyphe APIS Web configuration file. Default = ./config.json
+ARG CONFIG_JSON=./config.json
+# Network for the Hazelcrest cluster host. Default = 127.0.0.1
+ARG CLUSTER_HOST=127.0.0.1
+# Location of the PEM public cert. Default = ./cert.pem
+ARG CERT_PEM=./cert.pem
+# Location of the PEM private key. Default = ./key.pem
+ARG KEY_PEM=./key.pem
+
+
+FROM $BASE_IMAGE
+
+WORKDIR /hyphae-apis-main
+
+CMD java -jar $JAR \
+    -Djava.net.preferIPv4Stack=$PREFER_IPV4 \
+    -Duser.timezone=$USER_TIMEZONE \
+    -Djava.util.logging.config.file=$LOGGING_PROPERTIES \
+    -Dvertx.hazelcast.config=$CLUSTER_XML \
+    -conf $CONFIG_JSON \
+    -cluster -cluster-host $CLUSTER_HOST
