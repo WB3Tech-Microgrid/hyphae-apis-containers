@@ -35,7 +35,7 @@ jobs:
       IMAGE_NAME: hyphae-apis-base-java
       IMAGE_DESCRIPTION: "Base image for all WB3Tech Microgrid Hyphae software."
       IMAGE_SOURCE: ${{github.server_url}}/${{github.repository}}/hyphae-apis-base-java
-      REPOSITORY: ghcr.io/wb3tech-microgrid
+      CONTAINER_REPOSITORY: ${{github.repository}}/hyphae-apis-base-java
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3 
@@ -61,7 +61,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/wb3tech-microgrid/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{CONTAINER_REPOSITORY}}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -70,7 +70,7 @@ jobs:
           context: ${{ env.IMAGE_CONTEXT }}
           file: ${{ env.IMAGE_CONTEXT }}/${{ env.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }} #${{env.REPOSITORY}}/${{env.IMAGE_NAME}}:main  #${{ steps.meta.outputs.tags }}  Why does this not work?
+          tags: ${{ steps.meta.outputs.tags }}
           labels: |
             org.opencontainers.image.title=${{env.IMAGE_NAME}}
             org.opencontainers.image.description=${{env.IMAGE_DESCRIPTION}}
